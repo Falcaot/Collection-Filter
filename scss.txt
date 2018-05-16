@@ -1,0 +1,110 @@
+/*====================== Collection Template ======================*/
+.collection-content-wrap {
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  
+  .collection-products {
+    width: 100%;
+    
+    .grid-uniform {
+      display: -webkit-flex;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+    
+    .grid__item {
+      display: -webkit-flex;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      @include media(xlg) {
+        width: 33.3333%;
+      }
+      @include media(md) {
+        width: 50%;
+      }
+    }
+    
+    .section-header {
+      .section-header__title {
+        font-size: 14px;
+        font-weight: 400;
+        @include media(md) {
+          font-size: 23px;
+          font-weight: 700;
+          text-align: center;
+        }
+        @include media(sm) {
+          font-size: 18px;
+        }
+      }
+      
+      .section-header__right {
+        @include media(md) {
+          display: -webkit-flex;
+          display: -moz-box;
+          display: -ms-flexbox;
+          display: flex;
+        }
+
+        .tags-filter {
+          width: 100%;
+          padding: 0 5px;
+        }
+        
+        .form-horizontal {
+          @include media(md) {
+            width: 100%;
+            padding: 0 5px;
+          }
+
+          label {
+            font-size: 14px;
+            text-transform: uppercase;
+            @include media(md) {
+              display: none;
+            }
+          }
+
+          select {
+            height: 36px;
+            line-height: 36px;
+            padding-bottom: 0;
+            padding-top: 0;
+            @include media(md) {
+              margin: 0;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .collection-filter {
+    width: 170px;
+    padding-right: 10px;
+    -ms-flex-shrink: 0;
+    flex-shrink: 0;
+    @include media(md) {
+      padding-right: 0;
+      width: 0;
+    }
+    
+    .filter-tag-group {
+      .filter-by {
+        font-size: 14px;
+        text-transform: uppercase;
+        padding: 8px 0;
+        margin-bottom: 8px;
+      }
+      
+    }
+  }
+}

@@ -1,0 +1,463 @@
+<style>
+  #showTagsFilter{
+    font-size: 14px;
+    width: 100%;
+    height: 36px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .filter-tag-group,
+  #tags-filter-content{  
+    width: 100%;
+    float: left;
+    max-width: 200px;
+  }
+  #tags-filter-content .tag-group .title{
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+  }
+  #tags-filter-content .tag-group{
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  #tags-filter-content .tag-group > ul{
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 15px;
+  }
+  
+  #tags-filter-content .filter-tag-group .tag-group .title::after {
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+    margin-top: -8px;
+    right: 15px;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: none;
+    content: '';
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    -webkit-transform-origin: 66% 66%;
+    -ms-transform-origin: 66% 66%;
+    transform-origin: 66% 66%;
+    -webkit-transition: all 0.15s ease-in-out;
+    transition: all 0.15s ease-in-out;
+  }
+  
+  #tags-filter-content .filter-tag-group .tag-group .title.open::after {
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+    
+  #tags-filter-content .tag-group > ul.swatch-list{
+    max-width: 160px;
+    margin-left: -5px;
+  }
+  
+  #tags-filter-content .tag-group::-webkit-scrollbar{
+    display: none;
+  }
+   #tags-filter-content.tags-closed .tag-group{
+    height: 0px; 
+    min-height: 0px; 
+  }
+  #tags-filter-content.tags-closed{  
+    border-bottom: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  #tags-filter-content .tag-group:last-child{
+
+  }
+  #tags-filter-content .tag-group li{
+    margin: 0 2px;
+    display: block;
+    width: 100%;
+    float: left;
+  }
+  
+  #tags-filter-content .tag-group li a{
+    font-size: 12px;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  #tags-filter-content .tag-group.cat-list li a{
+    font-size: 12px;
+    position: relative;
+    padding-left: 0;
+  }
+
+  #tags-filter-content .tag-group.cat-list li.active a{
+    text-decoration: underline;
+    color: {{ settings.color_primary }};
+  }
+  
+  #tags-filter-content .tag-group.cat-list li a:hover{
+    text-decoration: underline;
+  }
+
+  #tags-filter-content .tag-group li a span.fe-checkbox{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 50%;
+    left: 0;
+    margin-top: -7px;
+    background-image: url({{ 'unchecked.svg' | asset_url }});
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  #tags-filter-content .tag-group li.active a span.fe-checkbox{
+    background-image: url({{ 'checked.svg' | asset_url }});
+  }
+
+  #tags-filter-content .swatch-tag{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    margin-right: 7px;
+    width: auto !important;
+  }
+  #tags-filter-content .swatch-tag span a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  #tags-filter-content .tag-group li{
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    border: 1px solid #fff;
+    padding: 0;
+  }
+
+  #tags-filter-content .tag-group li.swatch-tag{
+    padding: 2px;  
+  }
+
+  #tags-filter-content .tag-group li.white-color span{
+    border-color: #ddd;  
+    border-width: 1px;
+    border-style: solid;
+  }
+  #tags-filter-content .swatch-tag span{
+    display: block;
+    width: 20px;
+    height: 20px;    
+    background-position: center center;
+    background-repeat: repeat;  
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+  #tags-filter-content .swatch-tag{
+    border-width: 2px;
+    border-style: solid; 
+    border-color: transparent;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+  #tags-filter-content .swatch-tag:hover{
+    border-color: #ddd !important; 
+  }
+
+  #tags-filter-content .swatch-tag.active{
+    border-color: #009ace !important;
+  }
+
+  #tags-filter-content .tag-group li.swatch-tag.active span a{
+    background-image: url({{ 'close.svg' | asset_url }}); 
+    background-size: 7px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding: 0;
+  }
+
+  #tags-filter-content .tag-group li.swatch-tag.active.white-color span a{
+    background-image: url({{ 'close-dark.svg' | asset_url }}); 
+    background-size: 7px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding: 0;
+  }
+
+  #tags-filter-content .swatch-tag.white-color:hover span, 
+  #tags-filter-content .swatch-tag.active.white-color span{
+    border-color: #ddd;
+  }
+  @media (max-width: 1360px){
+    #tags-filter-content .tag-group li a{
+      padding-left: 20px;  
+    }  
+  }
+  /*END FILTER*/
+
+
+  /*LOAD*/
+  #collection-content{
+    position: relative;
+  }
+  #tags-load{
+    text-align: center;
+    width: 100%;
+    height: 100%;  
+    left: 0;
+    position: fixed;  
+    z-index: 999;
+    top: 0;
+  }
+
+  #tags-load svg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+  #tags-load:before{
+    content: '';
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=0.7);
+    opacity: 0.7;
+  }
+  #tags-load .fa{
+    position: absolute;
+    top: 40%;
+  }
+  #content{
+    overflow: hidden;
+  }
+  /*END LOAD*/
+  @media (max-width: 991px){
+    #tags-filter-content .tag-group{
+      width: 100%;
+      float: left;
+    }
+    #tags-filter-content .tag-group#coll-filter-2{
+
+    }
+    #showTagsFilter .fa{
+      margin-top: -6px;
+      right: 5px;
+    }
+  }
+  
+  @media (max-width: 768px){
+    #tags-filter-content {
+      display: none;
+      padding: 10px;
+      -webkit-transition: height 0.25s ease-in-out;
+      -moz-transition: height 0.25s ease-in-out;
+      -o-transition: height 0.25s ease-in-out;
+      transition: height 0.25s ease-in-out;
+      position: absolute;
+      background: #fff;
+      top: 85px;
+      left: 0;
+      width: calc(100% - 10px);
+      z-index: 9;
+      margin: 0 5px;
+      -webkit-box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
+      -moz-box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
+      box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
+      max-width: unset;
+    }
+    #tags-filter-content.tags-open {
+      display: block;
+    }
+  }
+  
+</style>
+<div id="tags-filter-content">
+  <!-- filter tags group -->
+  <div class="filter-tag-group" data-accordion-group>
+    <p class="filter-by medium-down--hide">Filter By</p>
+
+    {% if section.settings.col_filter %}
+    <div class="tag-group cat-list" id="coll-filter-0" data-accordion>
+      	<h3 class="title">{{ section.settings.col_filter_label }}</h3>
+        <ul>
+          {% for col in linklists[section.settings.cat_list].links %}
+          <li class="{% if col.active %}active{% endif %}">
+            <a href="{{ col.url }}">{{ col.title }}{% if link.type == "collection_link" %}<span>({{col.products_count}})</span>{% endif %}</a>
+          </li>
+          {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    {% for block in section.blocks %}
+    {% if block.type == "filter_block" %}
+    {% assign array_tags = block.settings.tags | split: ',' %}
+    {% if array_tags.size > 0 %}
+    <div class="tag-group" id="coll-filter-{{ forloop.index }}" data-accordion>
+      {% assign swatch = false %}
+      {% if section.settings.color_swatch %}
+      {% if block.settings.title contains 'Color' or block.settings.title contains 'color' %}
+      {% assign swatch = true %}
+      {% endif %}
+      {% endif %}
+      <h3 class="title">{{ block.settings.title }}</h3>
+      <ul {% if swatch %}class="swatch-list"{% endif %}>
+        {% for t in array_tags %}
+        {% assign tag = t | strip %}
+        {% if collection.tags contains tag %}
+        {% if swatch %}
+
+        {% assign color_img = tag | downcase | handleize | append: '.png' | asset_url %}
+        {% assign style = 'background-color: ' | append: tag | downcase | append: '; background-image: url(' | append: color_img | append: ');' %}
+
+        {% if current_tags contains tag %}
+        <li class="active swatch-tag {% if tag contains 'White' or tag contains 'white' or tag contains 'clear' or tag contains 'Clear' %} white-color{% endif %}"><span style="{{ style }}" class="btooltip" data-toggle="tooltip" data-placement="top" title="{{tag}}">{{ ' ' | link_to_remove_tag: tag }}</span></li>
+        {% else %}
+        <li class="swatch-tag {% if tag contains 'White' or tag contains 'white' or tag contains 'clear' or tag contains 'Clear' %} white-color{% endif %}"><span style="{{ style }}" class="btooltip" data-toggle="tooltip" data-placement="top" title="{{tag}}">{{ ' ' | link_to_add_tag: tag }}</span></li>
+        {% endif %}
+
+
+        {% else %}
+        {% if current_tags contains tag %}
+        <li class="active">{{ '<span class="fe-checkbox"></span> ' | append: tag | link_to_remove_tag: tag }}</li>
+        {% else %}
+        <li>{{ '<span class="fe-checkbox"></span> ' | append: tag | link_to_add_tag: tag }}</li>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% elsif block.type == "cat_block" %}
+    <div class="tag-group cat-list" id="coll-filter-0">
+      <h3 class="title">{{ block.settings.title }}</h3>
+      <ul>
+        {% for col in linklists[block.settings.list].links %}
+        <li class="{% if col.active %}active{% endif %}">
+          <a href="{{ col.url }}">{{ col.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+  </div>
+  <script>
+    $(function () {
+      
+//       $('.tag-group').accordion({
+//         "transitionSpeed": 300,
+//         "singleOpenis" : false
+//       });
+     
+
+      function toggleTagsFilter(){ 
+        $('#showTagsFilter').click(function() {
+          $('#tags-filter-content').toggleClass('tags-open');
+
+          var $this = $(this);
+          $this.toggleClass('showfilter');
+          if($this.hasClass('showfilter')){
+            $this.text('Hide Filter -');         
+          } else {
+            $this.text('Show Filter +');
+          }
+        });
+      }
+
+      toggleTagsFilter();
+
+
+      function collectionFilter() {     
+        $(".tag-group").each(function(){
+          $(this).find("ul li a").click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.ajax({
+              type: 'GET',
+              url: url,
+              data: {},
+              beforeSend: function( xhr ) {
+                $("#tags-load").show();
+              },
+              complete: function (data) {          
+                $('#collection-content').html($("#collection-content", data.responseText).html());
+                history.pushState({
+                  page: url
+                }, url, url);
+                collectionFilter();
+                $("#tags-load").hide();
+              }
+            });
+          });  
+
+          $(this).click(function() {
+            $('#showTagsFilter').text('Show Filter +'); 
+          });
+        });
+      }
+
+      collectionFilter();
+
+      //Filter item blank
+      $('#tags-filter-content .tag-group > ul:not(:has(li))').parent().remove();
+      
+    });
+    
+    (function($) {
+      $('.tag-group > h3').each(function() {
+        $(this).click(function() {
+          $(this).toggleClass("open");
+          $(this).parent().find("ul").slideToggle();
+          return false;
+        });
+      });
+    })(jQuery);
+    
+
+    // $(window).ready(function($) {
+    //   $('[data-toggle="tooltip"]').tooltipster({
+    //     animation: 'fade',
+    //     delay: 100,
+    //     theme: 'tooltipster-borderless'
+    //   }); 
+    // });
+   
+
+  </script>
+</div>

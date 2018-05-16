@@ -1,0 +1,171 @@
+{% assign limit = section.settings.limit %}
+{% paginate collection.products by limit %}
+
+{% comment %}
+Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+
+<div id="tags-load" style="display:none;">{% include "icon-loading" %}</div>  
+
+<div id="collection-content">
+  <div class="collection-content-wrap">
+    <div class="collection-filter">
+      {% include 'collection-filter' %}
+    </div>
+    
+    <div class="collection-products">
+
+      {% comment %}
+      Different markup if a collection description exists
+      {% endcomment %}
+      {% if collection.description != blank %}
+      <header class="section-header">
+        <h1 class="section-header__title">{{ collection.title }}</h1>
+        <div class="rte rte--header">
+          {{ collection.description }}
+        </div>
+      </header>
+      <div class="section-header">
+        <div class="section-header__right">
+          <div class="tags-filter large--hide">
+            <button id="showTagsFilter">Show Filter +</button>
+          </div>
+          {% include 'collection-sorting' %}
+        </div>
+      </div>
+      {% else %}
+      <header class="section-header">
+        <h1 class="section-header__title section-header__left">{{ collection.title }}</h1>
+        <div class="section-header__right">
+          <div class="tags-filter large--hide">
+            <button id="showTagsFilter">Show Filter +</button>
+          </div>
+          {% include 'collection-sorting' %}
+        </div>
+      </header>
+      {% endif %}
+
+      {% comment %}
+      Use class grid-uniform to have evenly sized columns clear
+      each other properly at each breakpoint.
+      {% endcomment %}
+      <div class="grid--full grid-uniform">
+
+        {% comment %}
+        Loop through our products in the current collection.
+        See the snippet 'product-grid-item' for the layout.
+        {% endcomment %}
+        {% for product in collection.products %}
+
+        {% include 'product-grid-item' %}
+
+        {% else %}
+
+        {% if collection.handle == 'all' and current_tags == '' %}
+
+        {% comment %}
+        Add default products to help with onboarding for collections/all only
+        {% endcomment %}
+        {% unless emptyState %}
+        {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+        {% assign emptyState = true %}
+        {% endunless %}
+        {% include 'onboarding-empty-collection' %}
+
+        {% else %}
+
+        {% comment %}
+        If collection exists but is empty, display message
+        {% endcomment %}
+        <div class="grid__item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
+
+      </div>
+
+      {% if paginate.pages > 1 %}
+      <div class="pagination">
+        {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endpaginate %}
+
+
+{% schema %}
+  {
+    "name": "Collection Template",
+	"class": "collection-page-section",
+    "settings": [
+	  {
+        "type": "header",
+        "content": "Product limit"
+      },
+      {
+        "type": "text",
+        "id": "limit",
+        "label": "Product limit:",
+		"default": "24"
+      },
+	  {
+        "type": "header",
+        "content": "Tags filter"
+      },
+      {
+        "type": "checkbox",
+        "id": "col_filter",
+        "label": "Enable Categories",
+		"default": true
+      },
+      {
+        "type": "text",
+        "id": "col_filter_label",
+        "label": "Label:"
+      },
+      {
+        "type": "link_list",
+        "id": "cat_list",
+        "label": "Default Category Linklist"
+      },
+      {
+        "type": "checkbox",
+        "id": "color_swatch",
+        "label": "Enable Color Swatch?",
+		"default": true
+      }
+	],
+    "blocks": [
+      {
+        "type": "filter_block",
+        "name": "Filter Group",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Label"
+          },
+          {
+            "type": "text",
+            "id": "tags",
+            "label": "Keys:",
+            "info": "Separate tags with comma"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
